@@ -1,61 +1,122 @@
-const fetchCanzoniPreferite = async function () {
+let canzoniGenerale = [];
+
+//SEZIONE 1//
+const canzoniPreferite = async function () {
   try {
     let res = await fetch(
-      "https://striveschool-api.herokuapp.com/api/deezer/search?q=brucespringsteen"
+      "https://striveschool-api.herokuapp.com/api/deezer/search?q=shakira"
     );
 
-    let { data: album } = await res.json();
-    console.log("data", album);
+    if (res.ok) {
+      let data = await res.json();
+      let i = 0;
+      let row1 = document.querySelector("#rowPrimasezione");
+      for (i = 0; i < 3; i++) {
+        let album = data.data[i];
+        canzoniGenerale.push(album);
+        row1.innerHTML += `
+        <div class="col">
+          <div class="card me-4" style="width: 18rem; height: 30rem ">
+            <img src="${album.album.cover_medium}" class="card-img-top" alt="">
+              <div class="card-body"><h5>${album.title}</h5>
+                  <p class="card-text">${album.artist.name}</p>
+         
+               </div>
+          </div>
+        </div>`;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+canzoniPreferite();
 
-    const row = document.querySelector("#rowPrimaSezione");
-    const albums = [album[2], album[4], album[5]];
-    albums.forEach((singoloAlbum) => {
-      row.innerHTML += `
-<div class="col">
-<div class="card" style="width: 18rem;">
-  <img src="${singoloAlbum.album.cover_big}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">"${singoloAlbum.album.title}"</h5>
-    <p class="card-text"> "${singoloAlbum.artist.name}"</p>
+//SEZIONE 2//
+const CanzonePreferitaa = async function () {
+  try {
+    let res = await fetch(
+      "https://striveschool-api.herokuapp.com/api/deezer/search?q=flowersmileycyrus"
+    );
 
-  </div>
-</div>
-</div>
-`;
-    });
+    if (res.ok) {
+      let data = await res.json();
+
+      let row2 = document.querySelector("#rowSecondasezione");
+      let canzonePreferita = data.data[0];
+      canzoniGenerale.push(canzonePreferita);
+      row2.innerHTML += `
+      <div class="col">
+      <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="${canzonePreferita.album.cover_big}"class="img-fluid rounded-start" alt="cover album">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">${canzonePreferita.title}</h5>
+                      <p class="card-text"> ${canzonePreferita.artist.name}</p>
+                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>`;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+CanzonePreferitaa();
+
+//SEZIONE 3 CAROSELLO//
+
+const Carosello = async function (canzoni) {
+  try {
+    let res = await fetch(canzoni);
+    if (res.ok) {
+      let data = await res.json();
+      let carouselReference = document.getElementById("carosello");
+      let canzoniCarosello = data.data[0];
+      canzoniGenerale.push(canzoniCarosello);
+      carouselReference.innerHTML += `
+               <div class="carousel-item active">
+              <img src="${canzoniCarosello.album.cover_big}" class="d-block w-100" alt="cover album">
+            </div>`;
+    } else {
+      console.log("errore");
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
-const fetchCanzonePreferita = async function () {
-  try {
-    let res = await fetch(
-      "https://striveschool-api.herokuapp.com/api/deezer/search?q=nothingelsemattersmetallica"
-    );
+Carosello("https://striveschool-api.herokuapp.com/api/deezer/search?q=thewall");
+Carosello(
+  "https://striveschool-api.herokuapp.com/api/deezer/search?q=disumano"
+);
+Carosello(
+  "https://striveschool-api.herokuapp.com/api/deezer/search?q=agirllikeme"
+);
 
-    let { data: canzone } = await res.json();
-    console.log("data", canzone);
+function rank() {
+  canzoniGenerale.rank.sort((a, b) => {
+    return a - b;
+  });
 
-    const row = document.querySelector("#rowSecondaSezione");
-    const canzonePreferita = [canzone[6]];
-    canzonePreferita.forEach((singolaCanzone) => {
-      row.innerHTML += `
-<div class="col">
-<div class="card" style="width: 18rem;">
-  <img src="${singolaCanzone.album.cover_big}" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">"${singolaCanzone.album.title}"</h5>
-    <p class="card-text"> "${singolaCanzone.artist.name}"</p>
+  canzoniGenerale.map((canzone) => canzone.rank + " - " + canzone.title);
+}
 
-  </div>
-</div>
-</div>
-`;
-    });
-  } catch (error) {
-    console.log(error);
+const modale = function () {
+  const modaleReference = document.querySelector(".modaleClasse");
+  let canzoniCiclate = "";
+  for (let i = 0; i < canzoniGenerale.length; i++) {
+    canzoniCiclate = canzoniGenerale[i].title;
+    modaleReference.innerHTML += `
+  <div class="modal-body">
+ 
+  <div>
+   </div>
+  </div>`;
   }
 };
-
-fetchCanzoniPreferite();
