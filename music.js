@@ -100,22 +100,27 @@ Carosello(
 );
 
 function rank() {
-  canzoniGenerale.rank.sort((a, b) => {
-    return a - b;
+  canzoniGenerale.sort((a, b) => {
+    return a.rank - b.rank;
   });
 
-  canzoniGenerale.map((canzone) => canzone.rank + " - " + canzone.title);
+  for (let i = 0; i < canzoniGenerale.length; i++) {
+    const rankPiùTitolo =
+      canzoniGenerale[i].rank + " " + canzoniGenerale[i].title;
+    alert(rankPiùTitolo);
+  }
 }
 
 const modale = function () {
-  const modaleReference = document.querySelector(".modaleClasse");
-  let canzoniCiclate = "";
+  const modaleReference = document.querySelector("#modale");
+
   for (let i = 0; i < canzoniGenerale.length; i++) {
-    canzoniCiclate = canzoniGenerale[i].title;
+    const canzoniCiclate =
+      canzoniGenerale[i].title + " " + canzoniGenerale[i].album.title;
     modaleReference.innerHTML += `
-  <div class="modal-body">
- 
   <div>
+ 
+  "${canzoniGenerale[i].title}" / "${canzoniGenerale[i].album.title}"
    </div>
   </div>`;
   }
